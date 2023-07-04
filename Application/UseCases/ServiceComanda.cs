@@ -25,14 +25,13 @@ namespace Application.UseCases
             int totalInt =  (int)total;
 
             DateTime localDateTime = DateTime.Now;
-            TimeZoneInfo argentinaTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Argentina Standard Time");
-            DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(localDateTime, argentinaTimeZone);
-
+            DateTime localDateTimeWithKind = DateTime.SpecifyKind(localDateTime, DateTimeKind.Local);
+            DateTime utcDateTime = TimeZoneInfo.ConvertTimeToUtc(localDateTimeWithKind);
 
             Comanda comanda = new Comanda
             {
                 PrecioTotal = totalInt,
-                Fecha = utcDateTime,
+                Fecha = utcDateTime.AddHours(-3),
                 FormaEntregaId = request.FormaEntrega
             };
 
