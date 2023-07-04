@@ -8,6 +8,8 @@ namespace Hosting.Net.Helpers
         {
             var connectionString = configuration.GetConnectionString("DefaultConnection");
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            // restaurant_m0mq_user:W8YFoT6uWuBJjitD1TBCZkuj9SM5aVlx@dpg-cii200l9aq012epavrc0-a.oregon-postgres.render.com/restaurant_m0mq
             return string.IsNullOrEmpty(databaseUrl) ? connectionString : BuildConnectionString(databaseUrl);
         }
 
