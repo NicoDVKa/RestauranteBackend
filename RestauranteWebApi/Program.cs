@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Application.UseCases;
+using Hosting.Net.Helpers;
 using Infraestructure.Commands;
 using Infraestructure.Persistence;
 using Infraestructure.Queries;
@@ -15,6 +16,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+
+connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
 builder.Services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connectionString));
 
