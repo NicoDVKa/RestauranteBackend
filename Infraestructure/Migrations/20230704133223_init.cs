@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,9 +18,9 @@ namespace Infraestructure.Migrations
                 name: "FormaEntrega",
                 columns: table => new
                 {
-                    FormaEntregaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    FormaEntregaId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Descripcion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -30,9 +31,9 @@ namespace Infraestructure.Migrations
                 name: "TipoMercaderia",
                 columns: table => new
                 {
-                    TipoMercaderiaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Descripcion = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false)
+                    TipoMercaderiaId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Descripcion = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,10 +44,10 @@ namespace Infraestructure.Migrations
                 name: "Comanda",
                 columns: table => new
                 {
-                    ComandaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FormaEntregaId = table.Column<int>(type: "int", nullable: false),
-                    PrecioTotal = table.Column<int>(type: "int", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "Date", nullable: false)
+                    ComandaId = table.Column<Guid>(type: "uuid", nullable: false),
+                    FormaEntregaId = table.Column<int>(type: "integer", nullable: false),
+                    PrecioTotal = table.Column<int>(type: "integer", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -63,14 +64,14 @@ namespace Infraestructure.Migrations
                 name: "Mercaderia",
                 columns: table => new
                 {
-                    MercaderiaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Nombre = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    TipoMercaderiaId = table.Column<int>(type: "int", nullable: false),
-                    Precio = table.Column<int>(type: "int", nullable: false),
-                    Ingredientes = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Preparacion = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
-                    Imagen = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false)
+                    MercaderiaId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Nombre = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
+                    TipoMercaderiaId = table.Column<int>(type: "integer", nullable: false),
+                    Precio = table.Column<int>(type: "integer", nullable: false),
+                    Ingredientes = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Preparacion = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false),
+                    Imagen = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -87,10 +88,10 @@ namespace Infraestructure.Migrations
                 name: "ComandaMercaderia",
                 columns: table => new
                 {
-                    ComandaMercaderiaId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    MercaderiaId = table.Column<int>(type: "int", nullable: false),
-                    ComandaId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                    ComandaMercaderiaId = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    MercaderiaId = table.Column<int>(type: "integer", nullable: false),
+                    ComandaId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {

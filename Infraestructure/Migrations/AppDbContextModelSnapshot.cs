@@ -3,8 +3,8 @@ using System;
 using Infraestructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
@@ -17,25 +17,25 @@ namespace Infraestructure.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.4")
-                .HasAnnotation("Relational:MaxIdentifierLength", 128);
+                .HasAnnotation("ProductVersion", "7.0.8")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Domain.Entities.Comanda", b =>
                 {
                     b.Property<Guid>("ComandaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("Fecha")
-                        .HasColumnType("Date");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<int>("FormaEntregaId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<int>("PrecioTotal")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("ComandaId");
 
@@ -48,15 +48,15 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("ComandaMercaderiaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ComandaMercaderiaId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ComandaMercaderiaId"));
 
                     b.Property<Guid>("ComandaId")
-                        .HasColumnType("uniqueidentifier");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("MercaderiaId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("ComandaMercaderiaId");
 
@@ -71,14 +71,14 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("FormaEntregaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FormaEntregaId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("FormaEntregaId"));
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("FormaEntregaId");
 
@@ -106,35 +106,35 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("MercaderiaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MercaderiaId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("MercaderiaId"));
 
                     b.Property<string>("Imagen")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Ingredientes")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<string>("Nombre")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.Property<int>("Precio")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.Property<string>("Preparacion")
                         .IsRequired()
                         .HasMaxLength(255)
-                        .HasColumnType("nvarchar(255)");
+                        .HasColumnType("character varying(255)");
 
                     b.Property<int>("TipoMercaderiaId")
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
                     b.HasKey("MercaderiaId");
 
@@ -349,14 +349,14 @@ namespace Infraestructure.Migrations
                 {
                     b.Property<int>("TipoMercaderiaId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+                        .HasColumnType("integer");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("TipoMercaderiaId"));
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("TipoMercaderiaId"));
 
                     b.Property<string>("Descripcion")
                         .IsRequired()
                         .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("character varying(50)");
 
                     b.HasKey("TipoMercaderiaId");
 
