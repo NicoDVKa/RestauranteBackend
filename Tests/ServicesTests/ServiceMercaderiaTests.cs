@@ -87,5 +87,69 @@ namespace Tests.ServicesTests
             // Assert
             Assert.Equivalent(expectedMercaderiaResponse, result);     
         }
+
+        [Fact]
+        public async Task GetMercaderiaById_ShouldReturnMercaderiaResponse()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            Mercaderia mercaderia = new Mercaderia
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 1,
+                    Descripcion = "1",
+                }
+            };
+            
+            MercaderiaResponse expectedMercaderiaResponse = new MercaderiaResponse
+            {
+                Id = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                Tipo = new TipoMercaderiaResponse
+                {
+                    Id = 1,
+                    Descripcion = "1",
+                }     
+            };
+
+            mockQuery.Setup(q => q.GetMercaderiaById(It.IsAny<int>())).Returns(Task.FromResult(mercaderia));
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.GetMercaderiaById(1);
+
+            // Assert
+            Assert.Equivalent(expectedMercaderiaResponse, result);
+        }
+
+        [Fact]
+        public async Task GetMercaderiaById_ShouldReturnNull()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+                    
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.GetMercaderiaById(1);
+
+            // Assert
+            Assert.Null(result);
+        }
     }
 }
