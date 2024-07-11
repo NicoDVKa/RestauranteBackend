@@ -5,9 +5,6 @@ using Application.UseCases;
 using Domain.Entities;
 using FluentAssertions;
 using Moq;
-using System.Collections;
-using System.Collections.Generic;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Tests.ServicesTests
 {
@@ -84,8 +81,8 @@ namespace Tests.ServicesTests
             // Act
             var result = await service.GetAllMercaderia();
 
-            // Assert
-            Assert.Equivalent(expectedMercaderiaResponse, result);     
+            // Assert 
+            result.Should().BeEquivalentTo(expectedMercaderiaResponse);
         }
 
         [Fact]
@@ -133,7 +130,8 @@ namespace Tests.ServicesTests
             var result = await service.GetMercaderiaById(1);
 
             // Assert
-            Assert.Equivalent(expectedMercaderiaResponse, result);
+            //Assert.Equivalent(expectedMercaderiaResponse, result);
+            result.Should().BeEquivalentTo(expectedMercaderiaResponse);
         }
 
         [Fact]
@@ -149,7 +147,7 @@ namespace Tests.ServicesTests
             var result = await service.GetMercaderiaById(1);
 
             // Assert
-            Assert.Null(result);
+            result.Should().BeNull();
         }
     }
 }
