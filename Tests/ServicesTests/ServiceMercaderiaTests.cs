@@ -10,7 +10,7 @@ using Moq;
 namespace Tests.ServicesTests
 {
     public class ServiceMercaderiaTests
-    {
+    { 
         [Fact]
         public async Task GetAllMercaderia_ShouldReturnListOfMercaderiaResponse()
         {
@@ -189,7 +189,7 @@ namespace Tests.ServicesTests
         }
 
         [Fact]
-        public async Task SearchMercaderia_ShouldReturnAListOfMercaderiaResponse()
+        public async Task SearchMercaderia_ShouldReturnAListOfMercaderiaGetResponse()
         {
             // Arrange
             var mockQuery = new Mock<IQueryMercaderia>();
@@ -439,6 +439,71 @@ namespace Tests.ServicesTests
 
             // Assert
             result.Should().BeEquivalentTo(mercaderiaResponse);
+        }
+
+        [Fact]
+        public async Task GetMercaderiaByName_ShouldReturnMercaderiaResponse()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            Mercaderia mercaderia = new Mercaderia()
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            MercaderiaResponse expectedMercaderia = new MercaderiaResponse()
+            {
+                Id = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                Tipo = new TipoMercaderiaResponse
+                {
+                    Id = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            mockQuery.Setup(q => q.GetMercaderiaByName(It.IsAny<string>())).Returns(Task.FromResult(mercaderia));
+            
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.GetMercaderiaByName("a");
+
+            // Assert
+            result.Should().BeEquivalentTo(expectedMercaderia); 
+        }
+
+        [Fact]
+        public async Task GetMercaderiaByName_ShouldReturnNull()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.GetMercaderiaByName("aaa");
+
+            // Assert
+            result.Should().BeNull();   
         }
     }
 }
