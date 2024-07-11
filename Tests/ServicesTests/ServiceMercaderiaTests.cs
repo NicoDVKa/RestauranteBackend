@@ -1,5 +1,6 @@
 ﻿
 using Application.Interfaces;
+using Application.Models.Request;
 using Application.Models.Response;
 using Application.UseCases;
 using Domain.Entities;
@@ -10,7 +11,6 @@ namespace Tests.ServicesTests
 {
     public class ServiceMercaderiaTests
     {
-
         [Fact]
         public async Task GetAllMercaderia_ShouldReturnListOfMercaderiaResponse()
         {
@@ -83,6 +83,26 @@ namespace Tests.ServicesTests
 
             // Assert 
             result.Should().BeEquivalentTo(expectedMercaderiaResponse);
+        }
+
+        [Fact]
+        public async Task GetAllMercaderia_ShouldReturnEmptyList()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            IList<Mercaderia> mercaderia = new List<Mercaderia>();
+
+            mockQuery.Setup(q => q.GetAllMercaderias()).Returns(Task.FromResult(mercaderia));
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.GetAllMercaderia();
+
+            // Assert 
+            result.Should().BeEmpty();
         }
 
         [Fact]
@@ -237,6 +257,188 @@ namespace Tests.ServicesTests
 
             // Assert
             result.Should().BeEquivalentTo(expectedMercaderiaResponse);
+        }
+
+        [Fact]
+        public async Task CreateMercaderia_ShouldReturnMercaderiaResponse()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            Mercaderia mercaderia = new Mercaderia()
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            MercaderiaRequest mercaderiaRequest = new MercaderiaRequest
+            {
+                Nombre = "Producto 1",
+                Tipo = 1,
+                Precio = 100,
+                Ingredientes = "x",
+                Preparacion = "x",
+                Imagen = "x"  
+            };
+
+            MercaderiaResponse expectedMercaderiaResponse = new MercaderiaResponse()
+            {
+                Id = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                Tipo = new TipoMercaderiaResponse
+                {
+                    Id = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            mockCommand.Setup(c => c.CreateMercaderia(It.IsAny<Mercaderia>())).Returns(Task.FromResult(mercaderia));
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.CreateMercaderia(mercaderiaRequest);
+
+            // Assert 
+            result.Should().BeEquivalentTo(expectedMercaderiaResponse);
+        }
+
+        [Fact]
+        public async Task DeleteMercaderia_ShouldReturnMercaderiaResponse()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            Mercaderia mercaderia = new Mercaderia()
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            MercaderiaResponse expectedMercaderiaResponse = new MercaderiaResponse()
+            {
+                Id = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                Tipo = new TipoMercaderiaResponse
+                {
+                    Id = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            mockCommand.Setup(c => c.DeleteMercaderia(It.IsAny<int>())).Returns(Task.FromResult(mercaderia));
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+            // Act
+            var result = await service.DeleteMercaderia(1);
+
+            // Assert 
+            result.Should().BeEquivalentTo(expectedMercaderiaResponse);
+        }
+
+        [Fact]
+        public async Task UpdateMercaderia_ShouldReturnMercaderiaResponse()
+        {
+            // Arrange
+            var mockQuery = new Mock<IQueryMercaderia>();
+            var mockCommand = new Mock<ICommandMercaderia>();
+
+            Mercaderia mercaderiaByQuery = new Mercaderia()
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 1",
+                Imagen = "x",
+                Preparacion = "x",
+                Precio = 100,
+                Ingredientes = "x",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 1,
+                    Descripcion = "1",
+                }
+            };
+
+            MercaderiaRequest mercaderiaRequest = new MercaderiaRequest()
+            {
+                Nombre = "Producto 2",
+                Imagen = "a",
+                Preparacion = "a",
+                Precio = 1,
+                Ingredientes = "a",
+                Tipo = 5,
+            };
+
+            Mercaderia mercaderiaByCommand = new Mercaderia()
+            {
+                MercaderiaId = 1,
+                Nombre = "Producto 2",
+                Imagen = "a",
+                Preparacion = "a",
+                Precio = 1,
+                Ingredientes = "a",
+                TipoMercaderia = new TipoMercaderia
+                {
+                    TipoMercaderiaId = 5,
+                    Descripcion = "aaa",
+                }
+            };
+
+            MercaderiaResponse mercaderiaResponse = new MercaderiaResponse()
+            {
+                Id = 1,
+                Nombre = "Producto 2",
+                Imagen = "a",
+                Preparacion = "a",
+                Precio = 1,
+                Ingredientes = "a",
+                Tipo = new TipoMercaderiaResponse
+                {
+                    Id = 5,
+                    Descripcion = "aaa",
+                }
+            };
+
+            mockQuery.Setup(q => q.GetMercaderiaById(It.IsAny<int>())).Returns(Task.FromResult(mercaderiaByQuery));
+            mockCommand.Setup(c => c.UpdateMercaderia(It.IsAny<int>(), It.IsAny<Mercaderia>())).Returns(Task.FromResult(mercaderiaByCommand));
+
+            var service = new ServiceMercaderia(mockQuery.Object, mockCommand.Object);
+
+
+            // Act
+            var result = await service.UpdateMercaderia(1, mercaderiaRequest);
+
+
+            // Assert
+            result.Should().BeEquivalentTo(mercaderiaResponse);
         }
     }
 }
