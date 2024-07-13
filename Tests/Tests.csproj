@@ -33,7 +33,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="ControllersTests\" />
     <Folder Include="QueriesTests\" />
   </ItemGroup>
 
