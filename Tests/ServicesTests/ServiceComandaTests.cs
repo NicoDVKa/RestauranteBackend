@@ -6,10 +6,7 @@ using Application.Models.Response;
 using Application.UseCases;
 using Domain.Entities;
 using FluentAssertions;
-using Infraestructure.Commands;
-using Infraestructure.Queries;
 using Moq;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Tests.ServicesTests
 {
@@ -463,6 +460,34 @@ namespace Tests.ServicesTests
 
             // Assert
             result.Should().BeEquivalentTo(expectedComandaResponses);
+        }
+
+        [Fact]
+        public async Task GetComandaByDate_ShouldBeReturnEmptyList()
+        {
+            // TODO
+            Assert.Fail();
+        }
+
+        [Fact]
+        public async Task GetComandaByDate_ShouldBeReturnListOfComandaResponses()
+        {
+            // TODO
+            Assert.Fail();
+        }
+
+        [Fact]
+        public async Task GetComandaById_ShouldReturnComandaGetResponse()
+        {
+            // TODO
+            Assert.Fail();
+        }
+
+        [Fact]
+        public async Task GetComandaById_ShouldReturnNull()
+        {
+            // TODO
+            Assert.Fail();
         }
     }
 }
