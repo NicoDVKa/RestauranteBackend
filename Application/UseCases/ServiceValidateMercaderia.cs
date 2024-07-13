@@ -16,7 +16,7 @@ namespace Application.UseCases
 
         public async Task<bool> MercaderiaIsValid(MercaderiaRequest request, bool allowNull)
         {
-            if (!stringIsValid("Nombre",request.Nombre,50,allowNull))
+            if (!StringIsValid("Nombre",request.Nombre,50,allowNull))
             {
                 return false;
             }
@@ -27,17 +27,17 @@ namespace Application.UseCases
                 return false;
             }
 
-            if (!stringIsValid("Ingredientes", request.Ingredientes, 255, allowNull))
+            if (!StringIsValid("Ingredientes", request.Ingredientes, 255, allowNull))
             {
                 return false;
             }
 
-            if (!stringIsValid("Preparacion", request.Preparacion, 255, allowNull))
+            if (!StringIsValid("Preparacion", request.Preparacion, 255, allowNull))
             {
                 return false;
             }
 
-            if (!stringIsValid("Imagen", request.Imagen, 255, allowNull))
+            if (!StringIsValid("Imagen", request.Imagen, 255, allowNull))
             {
                 return false;
             }
@@ -84,23 +84,23 @@ namespace Application.UseCases
             return true;    
         }
 
-        public bool stringIsValid(string tag, string? veryfy, int maxLenght, bool allowNull)
+        public bool StringIsValid(string tag, string? verify, int maxLenght, bool allowNull)
         {
-            if (!allowNull && veryfy == null)
+            if (!allowNull && verify == null)
             {
                 _error = $"{tag}-Ingrese un valor";
                 return false;
             }
 
-            if (veryfy != null)
+            if (verify != null)
             {
-                if (veryfy.Trim() == "")
+                if (verify.Trim() == "")
                 {
                     _error = $"{tag}-Ingrese un valor";
                     return false;
                 }
 
-                if (veryfy.Length == 0 || veryfy.Length > maxLenght)
+                if (verify.Length == 0 || verify.Length > maxLenght)
                 {
                     _error = $"{tag}-El campo no cumple con el formato";
                     return false;
