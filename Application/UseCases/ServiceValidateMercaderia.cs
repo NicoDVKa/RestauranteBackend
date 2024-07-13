@@ -9,6 +9,13 @@ namespace Application.UseCases
     {
         private string _error;
 
+        private readonly IHttpClientFactory _httpClient;
+
+        public ServiceValidateMercaderia(IHttpClientFactory httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
         public string GetError()
         {
            return _error;
@@ -48,7 +55,7 @@ namespace Application.UseCases
                 {
                     // Validar URL de la imagen
 
-                    var client = new HttpClient();
+                    var client = _httpClient.CreateClient();
                     var response = await client.GetAsync(request.Imagen);
 
 
@@ -105,10 +112,7 @@ namespace Application.UseCases
                     _error = $"{tag}-El campo no cumple con el formato";
                     return false;
                 }
-
-
             }
-
             return true;
         }
     }

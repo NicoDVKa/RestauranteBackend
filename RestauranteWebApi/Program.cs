@@ -48,6 +48,7 @@ builder.Services.AddScoped<ICommandTipoMercaderia, CommandTipoMercaderia>();
 builder.Services.AddScoped<ICommandComandaMercaderia, CommandComandaMercaderia>();
 
 builder.Services.AddScoped<IServiceValidateMercaderia,  ServiceValidateMercaderia>();
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
