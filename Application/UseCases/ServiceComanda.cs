@@ -12,7 +12,11 @@ namespace Application.UseCases
         private readonly ICommandComandaMercaderia _commandComandaMercaderia;
         private readonly IQueryComandaMercaderia _queryComandaMercaderia;
 
-        public ServiceComanda(IQueryComanda query, ICommandComanda command, ICommandComandaMercaderia commandComandaMercaderia, IQueryComandaMercaderia queryComandaMercaderia)
+        public ServiceComanda(IQueryComanda query, 
+                              ICommandComanda command, 
+                              ICommandComandaMercaderia commandComandaMercaderia, 
+                              IQueryComandaMercaderia queryComandaMercaderia
+        )
         {
             _queryComanda = query;
             _commandComanda = command;
