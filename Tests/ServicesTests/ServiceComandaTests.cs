@@ -24,7 +24,7 @@ namespace Tests.ServicesTests
             var precioTotal = 300.50;
             var comandaRequest = new ComandaRequest
             {
-                Mercaderias = [1,2,2],
+                Mercaderias = new List<int>(){ 1, 2, 2 },
                 FormaEntrega = 1,
             };
             var comandaCreated = new Comanda
