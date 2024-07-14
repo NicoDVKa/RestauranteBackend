@@ -28,14 +28,34 @@ namespace Tests.ControllersTests
         [Fact]
         public async Task SearchMercaderia_ShouldReturnEmptyList()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = "Orden inválido"
+            };
+
+            IList<MercaderiaGetResponse> mercaderiaGetResponses = new List<MercaderiaGetResponse>();
+
+            mockServiceMercaderia.Setup(m => m.SearchMercaderia(It.IsAny<int?>(), It.IsAny<string?>(), It.IsAny<string>()))
+                                 .ReturnsAsync(mercaderiaGetResponses);
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.SearchMercaderia(It.IsAny<int?>(), It.IsAny<string?>(), "ASC") as JsonResult;
+            var mercaderia = result.Value as IList<MercaderiaGetResponse>;
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(200);
+            mercaderia.Should().BeEmpty();
         }
 
         [Theory]
