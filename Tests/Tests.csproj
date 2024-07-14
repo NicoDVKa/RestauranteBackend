@@ -26,6 +26,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Infraestructure\Infraestructure.csproj" />
+    <ProjectReference Include="..\RestauranteWebApi\RestauranteWebApi.csproj" />
   </ItemGroup>
 
   <ItemGroup>

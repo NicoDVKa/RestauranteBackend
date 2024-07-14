@@ -1,5 +1,12 @@
 ﻿
 
+using Application.Interfaces;
+using Application.Models.Response;
+using FluentAssertions;
+using Microsoft.AspNetCore.Mvc;
+using Moq;
+using RestauranteWebApi.Controllers;
+
 namespace Tests.ControllersTests
 {
     public class MercaderiaControllerTests
@@ -215,14 +222,48 @@ namespace Tests.ControllersTests
         [Fact]
         public async Task DeleteMercaderia_ShouldReturnMercaderiaResponseWithStatusCode200()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var expectedMercaderia = new MercaderiaResponse()
+            {
+                Id = It.IsAny<int>(),
+                Nombre = It.IsAny<string>(),    
+                Precio = It.IsAny<double>(),
+                Imagen = It.IsAny<string>(),
+                Ingredientes = It.IsAny<string>(),
+                Preparacion = It.IsAny<string>(),
+                Tipo = It.IsAny<TipoMercaderiaResponse>()
+            };
+
+            IList<MercaderiaComandaResponse> comandaMercaderiaList = new List<MercaderiaComandaResponse>();
+
+            mockServiceMercaderia.Setup(m => m.GetMercaderiaById(It.IsAny<int>()))
+                                 .ReturnsAsync(expectedMercaderia);
+
+            mockServiceMercaderia.Setup(m => m.DeleteMercaderia(It.IsAny<int>()))
+                                 .ReturnsAsync(expectedMercaderia);
+
+            mockServiceComandaMercaderia.Setup(m => m.GetComandaMercaderiaByMercaderiaId(It.IsAny<int>()))
+                                        .ReturnsAsync(comandaMercaderiaList);
+
+            
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.DeleteMercaderia(It.IsAny<int>());
+            var jsonResult = Assert.IsType<JsonResult>(result);
 
             // Assert
-            Assert.Fail();
+            jsonResult.StatusCode.Should().Be(200);
+            jsonResult.Value.Should().BeEquivalentTo(expectedMercaderia);
         }
     }
 }
