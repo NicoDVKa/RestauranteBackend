@@ -38,6 +38,37 @@ namespace Tests.ControllersTests
             Assert.Fail();
         }
 
+        [Theory]
+        [InlineData("asdasa")]
+        [InlineData("asc1")]
+        [InlineData("desc1")]
+        public async Task SearchMercaderia_OrdenIsNotValid_ShouldReturnBadRequest(string? invalidOrden)
+        {
+            // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = "Orden inválido"
+            };
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
+
+            //Act
+            var result = await controller.SearchMercaderia(It.IsAny<int?>(), It.IsAny<string?>(), invalidOrden);
+
+            // Assert
+            var jsonResult = Assert.IsType<JsonResult>(result);
+            jsonResult.StatusCode.Should().Be(400);
+            jsonResult.Value.Should().BeEquivalentTo(expectedResponse);
+        }
+
         [Fact]
         public async Task CreateMercaderia_MercaderiaIsValid_ShouldReturnMercaderiaResponseWithStatusCode201()
         {
