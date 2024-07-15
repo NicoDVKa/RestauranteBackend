@@ -37,7 +37,7 @@ namespace RestauranteWebApi.Controllers
 
            IList<MercaderiaGetResponse> mercaderias = await _serviceMercaderia.SearchMercaderia(tipo, nombre, orden);
 
-           return new JsonResult(mercaderias);
+           return new JsonResult(mercaderias) { StatusCode = 200};
         }
 
         [HttpPost]

@@ -194,43 +194,108 @@ namespace Tests.ControllersTests
             Assert.Fail();
         }
 
-        [Fact]
-        public async Task GetMercaderiaById_IdIsNegative_ShouldReturnBadRequestWithStatusCode400()
+        [Theory]
+        [InlineData(0)]
+        [InlineData(-1)]
+        [InlineData(int.MinValue)]
+        public async Task GetMercaderiaById_IdIsNegativeOrZero_ShouldReturnBadRequestWithStatusCode400(int invalidId)
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = "Ingreso un ID inválido"
+            };
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.GetMercaderiaById(invalidId) as JsonResult;
+
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(400);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
         }
 
         [Fact]
         public async Task GetMercaderiaById_IdDoesNotExist_ShouldReturnBadRequestWithStatusCode404()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var id = 1;
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = $"No existe una mercaderia con el ID {id}"
+            };
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.GetMercaderiaById(id) as JsonResult;
+
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(404);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
         }
 
         [Fact]
         public async Task GetMercaderiaById__ShouldReturnMercaderiaResponseWithStatusCode200()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var id = 1;
+
+            var expectedMercaderia = new MercaderiaResponse()
+            {
+                Id = 1,
+                Nombre = "a",
+                Precio = 1,
+                Imagen = "a",
+                Ingredientes = "a",
+                Preparacion = "a",
+                Tipo = new TipoMercaderiaResponse()
+                {
+                    Id = 1,
+                    Descripcion = "a",
+                }
+            };
+
+            mockServiceMercaderia.Setup(m => m.GetMercaderiaById(It.IsAny<int>()))
+                                 .ReturnsAsync(expectedMercaderia);
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.GetMercaderiaById(id) as JsonResult;
+
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(200);
+            result.Value.Should().BeEquivalentTo(expectedMercaderia);
         }
 
         [Fact]
@@ -365,7 +430,7 @@ namespace Tests.ControllersTests
                     Id = It.IsAny<int>(),
                     Nombre = It.IsAny<string>(),
                     Precio  = It.IsAny<double>(),
-                }, 
+                },
                 new MercaderiaComandaResponse
                 {
                     Id = It.IsAny<int>(),
@@ -397,7 +462,7 @@ namespace Tests.ControllersTests
 
             //Act
             var result = await controller.DeleteMercaderia(It.IsAny<int>());
-           
+
 
             // Assert
             var jsonResult = Assert.IsType<JsonResult>(result);
@@ -417,7 +482,7 @@ namespace Tests.ControllersTests
             var expectedMercaderia = new MercaderiaResponse()
             {
                 Id = It.IsAny<int>(),
-                Nombre = It.IsAny<string>(),    
+                Nombre = It.IsAny<string>(),
                 Precio = It.IsAny<double>(),
                 Imagen = It.IsAny<string>(),
                 Ingredientes = It.IsAny<string>(),
@@ -436,7 +501,7 @@ namespace Tests.ControllersTests
             mockServiceComandaMercaderia.Setup(m => m.GetComandaMercaderiaByMercaderiaId(It.IsAny<int>()))
                                         .ReturnsAsync(comandaMercaderiaList);
 
-            
+
 
             var controller = new MercaderiaController(mockServiceMercaderia.Object,
                                                       mockServiceTipoMercaderia.Object,
