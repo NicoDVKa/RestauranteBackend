@@ -578,14 +578,45 @@ namespace Tests.ControllersTests
         [Fact]
         public async Task UpdateMercaderia_MercaderiaDoesNotExist_ShouldReturnBadRequestWithStatusCode404()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var id = 1;
+
+            var mercaderiaRequest = new MercaderiaRequest()
+            {
+                Nombre = "a",
+                Precio = 1,
+                Imagen = "a",
+                Ingredientes = "a",
+                Preparacion = "a",
+                Tipo = 1
+            };
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = $"No existe una mercaderia con el ID {id}"
+            };
+
+
+            mockServiceValidateMercaderia.Setup(m => m.MercaderiaIsValid(It.IsAny<MercaderiaRequest>(), true))
+                                         .ReturnsAsync(true);
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.UpdateMercaderia(id, mercaderiaRequest) as JsonResult;
+
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(404);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
         }
 
         [Fact]
