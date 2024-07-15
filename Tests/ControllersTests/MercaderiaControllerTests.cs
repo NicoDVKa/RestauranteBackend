@@ -7,6 +7,7 @@ using Azure.Core;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Update;
+using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Moq;
 using RestauranteWebApi.Controllers;
 
@@ -533,14 +534,45 @@ namespace Tests.ControllersTests
         [Fact]
         public async Task UpdateMercaderia_MercaderiaIsNotValid_ShouldReturnBadRequestWithStatusCode400()
         {
-            // TODO
-
             // Arrange
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceTipoMercaderia = new Mock<IServiceTipoMercaderia>();
+            var mockServiceComandaMercaderia = new Mock<IServiceComandaMercaderia>();
+            var mockServiceValidateMercaderia = new Mock<IServiceValidateMercaderia>();
+
+            var expectedResponse = new BadRequest()
+            {
+               Message = "Algun error en uno de los campos"
+            };
+
+            var mercaderiaRequest = new MercaderiaRequest()
+            {
+                Nombre = "a",
+                Precio = 1,
+                Imagen = "a",
+                Ingredientes = "a",
+                Preparacion = "a",
+                Tipo = 1
+            };
+
+            mockServiceValidateMercaderia.Setup(m => m.MercaderiaIsValid(It.IsAny<MercaderiaRequest>(), true))
+                                         .ReturnsAsync(false);
+
+            mockServiceValidateMercaderia.Setup(m => m.GetError())
+                                         .Returns(expectedResponse.Message);
+
+            var controller = new MercaderiaController(mockServiceMercaderia.Object,
+                                                      mockServiceTipoMercaderia.Object,
+                                                      mockServiceComandaMercaderia.Object,
+                                                      mockServiceValidateMercaderia.Object);
 
             //Act
+            var result = await controller.UpdateMercaderia(It.IsAny<int>(), mercaderiaRequest) as JsonResult;
+
 
             // Assert
-            Assert.Fail();
+            result.StatusCode.Should().Be(400);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
         }
 
         [Fact]
