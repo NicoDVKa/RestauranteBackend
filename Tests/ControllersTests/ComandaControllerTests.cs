@@ -15,7 +15,6 @@ namespace Tests.ControllersTests
         [InlineData("aa")]
         [InlineData("aaa")]
         [InlineData("aasd")]
-
         [InlineData("07/15/2024")] // Formato MM/dd/yyyy
         public async Task GetAll_FechaIsInvalid_ShouldReturnBadRequest400(string? fecha)
         {
@@ -263,7 +262,96 @@ namespace Tests.ControllersTests
             result.Value.Should().BeEquivalentTo(expectedResponse);
         }
 
+        [Fact]
+        public async Task GetComandaById_IdDoesNotExist_ShouldReturnBadRequestWithStatusCode404()
+        {
+            // Arrange
+            var mockServiceComanda = new Mock<IServiceComanda>();
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceFormaEntrega = new Mock<IServiceFormaEntrega>();
 
+            var id = Guid.NewGuid();
+
+            var expectedResponse = new BadRequest()
+            {
+                Message = $"No existe una comanda con el ID {id}"
+            };
+
+            var controller = new ComandaController(mockServiceComanda.Object,
+                                                   mockServiceMercaderia.Object,
+                                                   mockServiceFormaEntrega.Object);
+
+            // Act
+            var result = await controller.GetComandaById(id) as JsonResult;
+
+            // Assert
+            result.StatusCode.Should().Be(404);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
+        }
+
+        [Fact]
+        public async Task GetComandaById_ShouldReturnComandaGetResponseWithStatusCode200()
+        {
+            // Arrange
+            var mockServiceComanda = new Mock<IServiceComanda>();
+            var mockServiceMercaderia = new Mock<IServiceMercaderia>();
+            var mockServiceFormaEntrega = new Mock<IServiceFormaEntrega>();
+
+            var id = Guid.NewGuid();
+
+            ComandaGetResponse expectedResponse = new ComandaGetResponse()
+            {
+                Fecha = DateTime.Now,
+                Id = Guid.NewGuid(),
+                Total = 100,
+                FormaEntrega = new FormaEntrega()
+                {
+                    Id = 1,
+                    Descripcion = "a"
+                },
+                Mercaderias = new List<MercaderiaGetResponse>()
+                {
+                   new MercaderiaGetResponse()
+                   {
+                       Id = 1,
+                       Imagen = "A",
+                       Nombre = "1",
+                       Precio = 100,
+                       Tipo = new TipoMercaderiaResponse()
+                       {
+                           Id = 1,
+                           Descripcion = "a"
+                       }
+                   },
+                   new MercaderiaGetResponse()
+                   {
+                       Id = 2,
+                       Imagen = "b",
+                       Nombre = "11",
+                       Precio = 1000,
+                       Tipo = new TipoMercaderiaResponse()
+                       {
+                           Id = 2,
+                           Descripcion = "b"
+                       }
+                   }
+                }
+            };
+
+            mockServiceComanda.Setup(m => m.GetComandaById(It.IsAny<Guid>()))
+                              .ReturnsAsync(expectedResponse);
+
+            var controller = new ComandaController(mockServiceComanda.Object,
+                                                   mockServiceMercaderia.Object,
+                                                   mockServiceFormaEntrega.Object);
+
+            // Act
+            var result = await controller.GetComandaById(id) as JsonResult;
+
+            // Assert
+            result.StatusCode.Should().Be(200);
+            result.Value.Should().BeEquivalentTo(expectedResponse);
+        }
 
     }
 }
