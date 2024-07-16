@@ -98,15 +98,6 @@ namespace RestauranteWebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetComandaById(Guid id)
         {
-            Guid guid;
-            if (!Guid.TryParse(id.ToString(),out guid))
-            {
-                BadRequest request = new BadRequest()
-                {
-                    Message = $"Formato de ID inválido"
-                };
-                return new JsonResult(request) { StatusCode = 400 };
-            }
             ComandaGetResponse response = await _serviceComanda.GetComandaById(guid);
 
             if(response == null)
