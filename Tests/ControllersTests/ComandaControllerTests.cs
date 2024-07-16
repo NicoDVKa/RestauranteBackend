@@ -15,7 +15,7 @@ namespace Tests.ControllersTests
         [InlineData("aa")]
         [InlineData("aaa")]
         [InlineData("aasd")]
-        [InlineData("2024-07-15")] // Formato ISO (yyyy-MM-dd)
+
         [InlineData("07/15/2024")] // Formato MM/dd/yyyy
         public async Task GetAll_FechaIsInvalid_ShouldReturnBadRequest400(string? fecha)
         {
@@ -121,6 +121,7 @@ namespace Tests.ControllersTests
         }
 
         [Theory]
+        [InlineData("2024-07-15")] // Formato ISO (yyyy-MM-dd)
         [InlineData("15/07/2024")] // Formato dd/MM/yyyy
         [InlineData("2024/07/15")] // Formato yyyy/MM/dd
         [InlineData("15-Jul-2024")] // Formato dd-MMM-yyyy
@@ -231,6 +232,7 @@ namespace Tests.ControllersTests
         }
 
         [Theory]
+        [InlineData("2024-07-15")] // Formato ISO (yyyy-MM-dd)
         [InlineData("15/07/2024")] // Formato dd/MM/yyyy
         [InlineData("2024/07/15")] // Formato yyyy/MM/dd
         [InlineData("15-Jul-2024")] // Formato dd-MMM-yyyy
@@ -260,6 +262,8 @@ namespace Tests.ControllersTests
             result.StatusCode.Should().Be(200);
             result.Value.Should().BeEquivalentTo(expectedResponse);
         }
+
+
 
     }
 }
