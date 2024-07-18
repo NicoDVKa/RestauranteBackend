@@ -81,7 +81,7 @@ namespace RestauranteWebApi.Controllers
                 {
                     BadRequest request = new BadRequest()
                     {
-                        Message =$"No existe una mercaderia con el ID {mercaderiaId}"
+                        Message = $"No existe una mercaderia con el ID {mercaderiaId}"
                     };
 
                     return new JsonResult(request) { StatusCode = 400 };
@@ -90,7 +90,7 @@ namespace RestauranteWebApi.Controllers
                 total += mercaderiaResponse.Precio;
             }
 
-           ComandaResponse response = await _serviceComanda.CreateComanda(comandaRequest,total);
+            ComandaResponse response = await _serviceComanda.CreateComanda(comandaRequest,total);
 
             return new JsonResult(response) { StatusCode = 201  };
         }
@@ -98,16 +98,7 @@ namespace RestauranteWebApi.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetComandaById(Guid id)
         {
-            Guid guid;
-            if (!Guid.TryParse(id.ToString(),out guid))
-            {
-                BadRequest request = new BadRequest()
-                {
-                    Message = $"Formato de ID inválido"
-                };
-                return new JsonResult(request) { StatusCode = 400 };
-            }
-            ComandaGetResponse response = await _serviceComanda.GetComandaById(guid);
+            ComandaGetResponse response = await _serviceComanda.GetComandaById(id);
 
             if(response == null)
             {
