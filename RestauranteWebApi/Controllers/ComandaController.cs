@@ -81,7 +81,7 @@ namespace RestauranteWebApi.Controllers
                 {
                     BadRequest request = new BadRequest()
                     {
-                        Message =$"No existe una mercaderia con el ID {mercaderiaId}"
+                        Message = $"No existe una mercaderia con el ID {mercaderiaId}"
                     };
 
                     return new JsonResult(request) { StatusCode = 400 };
@@ -90,7 +90,7 @@ namespace RestauranteWebApi.Controllers
                 total += mercaderiaResponse.Precio;
             }
 
-           ComandaResponse response = await _serviceComanda.CreateComanda(comandaRequest,total);
+            ComandaResponse response = await _serviceComanda.CreateComanda(comandaRequest,total);
 
             return new JsonResult(response) { StatusCode = 201  };
         }
