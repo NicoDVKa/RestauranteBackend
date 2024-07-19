@@ -2,14 +2,13 @@
 using Domain.Entities;
 using FluentAssertions;
 using Infraestructure.Persistence;
+using Infraestructure.Queries;
 using Microsoft.EntityFrameworkCore;
 
 namespace Tests.QueriesTests
 {
     public class QueryComandaTests
     {
-
-
         [Fact]
         public async Task GetAll_ShouldReturnListOfComanda()
         {
@@ -19,8 +18,6 @@ namespace Tests.QueriesTests
                 .Options;
             using var context = new AppDbContext(options);
             
-            context.Database.EnsureDeleted();
-
             var tipoMercaderia = new TipoMercaderia 
             { 
                 Descripcion = "Entrada" 
@@ -42,7 +39,6 @@ namespace Tests.QueriesTests
             context.TipoMercaderia.Add(tipoMercaderia);
             context.Mercaderia.Add(mercaderia);
             context.FormaEntrega.Add(formaEntrega);
-            context.SaveChanges();
 
             var comanda1 = new Comanda
             {
@@ -75,12 +71,12 @@ namespace Tests.QueriesTests
                 comanda1, comanda2
             };
 
+            var queryComanda = new QueryComanda(context);
+
             // Act
-            IList<Comanda> comands = await context.Comanda.Include(c => c.ComandaMercaderias)
-                                                          .ThenInclude(c => c.Mercaderia)
-                                                          .ThenInclude(c => c.TipoMercaderia)
-                                                          .Include(c => c.FormaEntrega)
-                                                          .ToListAsync();
+            IList<Comanda> comands = await queryComanda.GetAll();
+            context.Database.EnsureDeleted();
+
             // Assert
             comands.Should().BeEquivalentTo(expectedResponse);
 
@@ -95,14 +91,11 @@ namespace Tests.QueriesTests
                 .Options;
             using var context = new AppDbContext(options);
 
-            context.Database.EnsureDeleted();
+            var queryComanda = new QueryComanda(context);
 
             // Act
-            IList<Comanda> comands = await context.Comanda.Include(c => c.ComandaMercaderias)
-                                                          .ThenInclude(c => c.Mercaderia)
-                                                          .ThenInclude(c => c.TipoMercaderia)
-                                                          .Include(c => c.FormaEntrega)
-                                                          .ToListAsync();
+            IList<Comanda> comands = await queryComanda.GetAll();
+
             // Assert
             comands.Should().BeEmpty();
         }
@@ -116,8 +109,6 @@ namespace Tests.QueriesTests
                 .Options;
             using var context = new AppDbContext(options);
 
-            context.Database.EnsureDeleted();
-
             var tipoMercaderia = new TipoMercaderia
             {
                 Descripcion = "Entrada"
@@ -139,7 +130,6 @@ namespace Tests.QueriesTests
             context.TipoMercaderia.Add(tipoMercaderia);
             context.Mercaderia.Add(mercaderia);
             context.FormaEntrega.Add(formaEntrega);
-            context.SaveChanges();
 
             var comanda1 = new Comanda
             {
@@ -169,12 +159,12 @@ namespace Tests.QueriesTests
 
             var expectedResponse = comanda2;
 
+            var queryComanda = new QueryComanda(context);
+
             // Act
-            Comanda comanda = await context.Comanda.Include(c => c.ComandaMercaderias)
-                                                   .ThenInclude(c => c.Mercaderia)
-                                                   .ThenInclude(c => c.TipoMercaderia)
-                                                   .Include(c => c.FormaEntrega)
-                                                   .SingleOrDefaultAsync(c => c.ComandaId == expectedResponse.ComandaId);
+            Comanda comanda = await queryComanda.GetComandaById(expectedResponse.ComandaId);
+            context.Database.EnsureDeleted();
+
             // Assert
             comanda.Should().BeEquivalentTo(expectedResponse);
         }
@@ -188,8 +178,6 @@ namespace Tests.QueriesTests
                 .Options;
             using var context = new AppDbContext(options);
 
-            context.Database.EnsureDeleted();
-
             var tipoMercaderia = new TipoMercaderia
             {
                 Descripcion = "Entrada"
@@ -211,7 +199,7 @@ namespace Tests.QueriesTests
             context.TipoMercaderia.Add(tipoMercaderia);
             context.Mercaderia.Add(mercaderia);
             context.FormaEntrega.Add(formaEntrega);
-            context.SaveChanges();
+
 
             var comanda1 = new Comanda
             {
@@ -240,13 +228,11 @@ namespace Tests.QueriesTests
             context.SaveChanges();
 
             var expectedResponse = comanda2;
-
+            var queryComanda = new QueryComanda(context);
+            
             // Act
-            Comanda comanda = await context.Comanda.Include(c => c.ComandaMercaderias)
-                                                   .ThenInclude(c => c.Mercaderia)
-                                                   .ThenInclude(c => c.TipoMercaderia)
-                                                   .Include(c => c.FormaEntrega)
-                                                   .SingleOrDefaultAsync(c => c.ComandaId == Guid.NewGuid());
+            Comanda comanda = await queryComanda.GetComandaById(Guid.NewGuid());
+            context.Database.EnsureDeleted();
             // Assert
             comanda.Should().BeNull();
         }
@@ -259,8 +245,6 @@ namespace Tests.QueriesTests
                 .UseInMemoryDatabase(databaseName: "Test")
                 .Options;
             using var context = new AppDbContext(options);
-
-            context.Database.EnsureDeleted();
 
             var tipoMercaderia = new TipoMercaderia
             {
@@ -283,7 +267,6 @@ namespace Tests.QueriesTests
             context.TipoMercaderia.Add(tipoMercaderia);
             context.Mercaderia.Add(mercaderia);
             context.FormaEntrega.Add(formaEntrega);
-            context.SaveChanges();
 
             var comanda1 = new Comanda
             {
@@ -322,6 +305,7 @@ namespace Tests.QueriesTests
             var date = DateTime.Now.AddDays(1);
 
             context.Comanda.AddRange(comanda1, comanda2, comanda3);
+
             context.SaveChanges();
 
             var expectedResponse = new List<Comanda>()
@@ -329,14 +313,12 @@ namespace Tests.QueriesTests
                 comanda2, comanda3
             };
 
+            var queryComanda = new QueryComanda(context);
+
             // Act
-            IList<Comanda> comandas = await context.Comanda
-                                         .Include(c => c.ComandaMercaderias)
-                                         .ThenInclude(c => c.Mercaderia)
-                                         .ThenInclude(c => c.TipoMercaderia)
-                                         .Include(c => c.FormaEntrega)
-                                         .Where(c => c.Fecha.Year == date.Year && c.Fecha.Month == date.Month && c.Fecha.Day == date.Day)
-                                         .ToListAsync();
+            IList<Comanda> comandas = await queryComanda.GetComandaByDate(date);
+            context.Database.EnsureDeleted();
+            
             // Assert
             comandas.Should().BeEquivalentTo(expectedResponse);
         }
@@ -349,8 +331,6 @@ namespace Tests.QueriesTests
                 .UseInMemoryDatabase(databaseName: "Test")
                 .Options;
             using var context = new AppDbContext(options);
-
-            context.Database.EnsureDeleted();
 
             var tipoMercaderia = new TipoMercaderia
             {
@@ -373,7 +353,6 @@ namespace Tests.QueriesTests
             context.TipoMercaderia.Add(tipoMercaderia);
             context.Mercaderia.Add(mercaderia);
             context.FormaEntrega.Add(formaEntrega);
-            context.SaveChanges();
 
             var comanda1 = new Comanda
             {
@@ -414,14 +393,12 @@ namespace Tests.QueriesTests
             context.Comanda.AddRange(comanda1, comanda2, comanda3);
             context.SaveChanges();
 
+            var queryComanda = new QueryComanda(context);
+
             // Act
-            IList<Comanda> comandas = await context.Comanda
-                                         .Include(c => c.ComandaMercaderias)
-                                         .ThenInclude(c => c.Mercaderia)
-                                         .ThenInclude(c => c.TipoMercaderia)
-                                         .Include(c => c.FormaEntrega)
-                                         .Where(c => c.Fecha.Year == date.Year && c.Fecha.Month == date.Month && c.Fecha.Day == date.Day)
-                                         .ToListAsync();
+            IList<Comanda> comandas = await queryComanda.GetComandaByDate(date);
+            context.Database.EnsureDeleted();
+
             // Assert
             comandas.Should().BeEmpty();
         }
