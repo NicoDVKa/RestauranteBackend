@@ -14,7 +14,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
             
@@ -64,7 +64,7 @@ namespace Tests.QueriesTests
             };
 
             context.Comanda.AddRange(comanda1, comanda2);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var expectedResponse = new List<Comanda>()
             {
@@ -75,7 +75,7 @@ namespace Tests.QueriesTests
 
             // Act
             IList<Comanda> comands = await queryComanda.GetAll();
-            context.Database.EnsureDeleted();
+            await context.Database.EnsureDeletedAsync();
 
             // Assert
             comands.Should().BeEquivalentTo(expectedResponse);
@@ -87,7 +87,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
 
@@ -105,7 +105,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
 
@@ -155,7 +155,7 @@ namespace Tests.QueriesTests
             };
 
             context.Comanda.AddRange(comanda1, comanda2);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var expectedResponse = comanda2;
 
@@ -163,7 +163,7 @@ namespace Tests.QueriesTests
 
             // Act
             Comanda comanda = await queryComanda.GetComandaById(expectedResponse.ComandaId);
-            context.Database.EnsureDeleted();
+            await context.Database.EnsureDeletedAsync();
 
             // Assert
             comanda.Should().BeEquivalentTo(expectedResponse);
@@ -174,7 +174,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
 
@@ -225,14 +225,15 @@ namespace Tests.QueriesTests
             };
 
             context.Comanda.AddRange(comanda1, comanda2);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var expectedResponse = comanda2;
             var queryComanda = new QueryComanda(context);
             
             // Act
             Comanda comanda = await queryComanda.GetComandaById(Guid.NewGuid());
-            context.Database.EnsureDeleted();
+            await context.Database.EnsureDeletedAsync();
+
             // Assert
             comanda.Should().BeNull();
         }
@@ -242,7 +243,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
 
@@ -306,7 +307,7 @@ namespace Tests.QueriesTests
 
             context.Comanda.AddRange(comanda1, comanda2, comanda3);
 
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var expectedResponse = new List<Comanda>()
             {
@@ -317,7 +318,7 @@ namespace Tests.QueriesTests
 
             // Act
             IList<Comanda> comandas = await queryComanda.GetComandaByDate(date);
-            context.Database.EnsureDeleted();
+            await context.Database.EnsureDeletedAsync();
             
             // Assert
             comandas.Should().BeEquivalentTo(expectedResponse);
@@ -328,7 +329,7 @@ namespace Tests.QueriesTests
         {
             // Arrange
             var options = new DbContextOptionsBuilder<AppDbContext>()
-                .UseInMemoryDatabase(databaseName: "Test")
+                .UseInMemoryDatabase(databaseName: "ComandaTests")
                 .Options;
             using var context = new AppDbContext(options);
 
@@ -391,13 +392,13 @@ namespace Tests.QueriesTests
             var date = DateTime.Now.AddDays(10);
 
             context.Comanda.AddRange(comanda1, comanda2, comanda3);
-            context.SaveChanges();
+            await context.SaveChangesAsync();
 
             var queryComanda = new QueryComanda(context);
 
             // Act
             IList<Comanda> comandas = await queryComanda.GetComandaByDate(date);
-            context.Database.EnsureDeleted();
+            await context.Database.EnsureDeletedAsync();
 
             // Assert
             comandas.Should().BeEmpty();

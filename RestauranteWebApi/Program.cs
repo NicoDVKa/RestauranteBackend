@@ -23,7 +23,7 @@ builder.Services.AddCors(policy =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+String? connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
 connectionString = ConnectionHelper.GetConnectionString(builder.Configuration);
 
