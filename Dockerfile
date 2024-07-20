@@ -19,5 +19,5 @@ EXPOSE 80
 EXPOSE 3000
 
 # Inicia la aplicación al ejecutar la imagen
-ENTRYPOINT ["dotnet", "RestauranteWebApi.dll", "--urls", "http://0.0.0.0:3000"]
+ENTRYPOINT ["dotnet", "RestauranteWebApi.dll"]
 
